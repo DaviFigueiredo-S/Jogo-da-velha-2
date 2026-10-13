@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#173d2d">
+<title>Mega Jogo da Velha — Lousa</title>
+<link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <main id="homeScreen" class="screen">
+    <div class="home-wrap">
+      <div class="chalk-brand"><span class="brand-doodle">X</span><span>Um clássico redesenhado a giz</span></div>
+      <h1 class="chalk-title">MEGA JOGO <span>DA VELHA</span></h1>
+      <p class="intro">Nove tabuleiros conectados. Cada jogada escolhe o próximo destino — e uma pirâmide pode virar o jogo.</p>
+      <div class="mode-cards">
+        <button type="button" id="friendMode" class="mode-card">
+          <div class="mode-icon friend" aria-hidden="true">X <span style="color:var(--chalk-soft);font-size:22px">×</span> O</div>
+          <h2>Jogar com amigo</h2>
+          <p>Duas pessoas, um tabuleiro e turnos alternados no mesmo dispositivo.</p>
+        </button>
+        <button type="button" id="aiMode" class="mode-card">
+          <div class="mode-icon" aria-hidden="true">✎ <span style="font:700 14px 'Trebuchet MS',sans-serif;color:var(--chalk-soft)">DESAFIO</span></div>
+          <h2>Jogar contra a IA</h2>
+          <p>Escolha entre quatro níveis de estratégia e teste suas decisões contra o computador.</p>
+        </button>
+      </div>
+      <div class="home-links">
+        <button type="button" class="chalk-button text-button" id="helpHome">Como funciona?</button>
+      </div>
+      <p class="chalk-note">81 casas · 9 territórios · uma linha para vencer</p>
+    </div>
+  </main>
+
+  <main id="difficultyScreen" class="screen hidden">
+    <div class="difficulty-wrap">
+      <div class="chalk-brand"><span class="brand-doodle">O</span><span>Escolha seu desafio</span></div>
+      <h1 class="chalk-title">Contra a <span>Inteligência Artificial</span></h1>
+      <p class="intro">Você joga de X e começa a partida. Escolha a força do adversário.</p>
+      <div class="difficulty-options" role="group" aria-label="Dificuldade da inteligência artificial">
+        <button type="button" class="difficulty-card" data-difficulty="facil" aria-pressed="false"><span class="difficulty-title">Fácil <span class="difficulty-dots">●○○○</span></span><p>Joga de forma simples e comete alguns erros para ajudar no aprendizado.</p></button>
+        <button type="button" class="difficulty-card selected" data-difficulty="medio" aria-pressed="true"><span class="difficulty-title">Médio <span class="difficulty-dots">●●○○</span></span><p>Percebe vitórias e ameaças óbvias, com planejamento curto.</p></button>
+        <button type="button" class="difficulty-card" data-difficulty="hard" aria-pressed="false"><span class="difficulty-title">Hard <span class="difficulty-dots">●●●○</span></span><p>Busca vários movimentos à frente e disputa territórios importantes.</p></button>
+        <button type="button" class="difficulty-card" data-difficulty="inferno" aria-pressed="false"><span class="difficulty-title">Inferno <span class="difficulty-dots">●●●●</span></span><p>Busca mais profunda, poda alfa-beta e avaliação global do tabuleiro.</p></button>
+      </div>
+      <div class="difficulty-actions"><button type="button" id="backHome" class="chalk-button">← Voltar</button><button type="button" id="startAI" class="chalk-button primary">Começar desafio →</button></div>
+    </div>
+  </main>
+
+  <main id="gameScreen" class="screen hidden">
+    <header class="game-topbar">
+      <div class="game-actions">
+        <button type="button" id="undoButton" class="chalk-button slim action-button" aria-label="Desfazer jogada" title="Desfazer jogada" disabled><span class="action-icon" aria-hidden="true">↶</span><span class="button-label">Desfazer jogada</span></button>
+        <button type="button" id="restartButton" class="chalk-button slim action-button" aria-label="Reiniciar partida" title="Reiniciar partida"><span class="action-icon" aria-hidden="true">↻</span><span class="button-label">Reiniciar</span></button>
+        <button type="button" id="menuButton" class="chalk-button slim action-button" aria-label="Menu principal" title="Menu principal"><span class="action-icon" aria-hidden="true">⌂</span><span class="button-label">Menu principal</span></button>
+      </div>
+    </header>
+    <section class="turn-area" aria-live="polite" aria-atomic="true">
+      <div class="turn-line"><span id="turnMark" class="turn-mark"></span><span id="turnText">Agora é a vez do X!</span></div>
+      <p id="turnDetail" class="turn-detail">Escolha qualquer território para começar.</p>
+    </section>
+    <section class="game-board-stage" aria-label="Mega tabuleiro de nove jogos da velha">
+      <div class="wood-frame"><div class="chalkboard-inset"><div id="megaBoard" class="mega-board"></div></div></div>
+    </section>
+    <div id="resultActions" class="result-actions"></div>
+  </main>
+
+  <div id="rulesModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="rulesTitle">
+    <div class="chalk-modal">
+      <div class="modal-head"><div><h2 id="rulesTitle">Como jogar</h2><p style="margin:0">As regras do Mega Jogo da Velha</p></div><button type="button" id="closeRules" class="modal-close" aria-label="Fechar instruções">×</button></div>
+      <div class="rule-part"><h3>1. O destino é a casa escolhida</h3><p>Os mini tabuleiros vão de 1 a 9. Se você marcar a casa 5 dentro de um território, seu oponente deverá jogar no território 5. Se esse território já estiver encerrado, ele poderá escolher qualquer território disponível.</p></div>
+      <div class="rule-part"><h3>2. Conquiste territórios</h3><p>Três símbolos iguais em linha, coluna ou diagonal conquistam o mini tabuleiro, que se transforma em um X ou O grande. Não é mais possível jogar nele.</p></div>
+      <div class="rule-part"><h3>3. Pirâmide coringa</h3><p>Se um mini tabuleiro empatar, ele vira uma pirâmide neutra. Uma linha principal vence quando contém pelo menos dois territórios do mesmo jogador e a terceira casa pertence a esse jogador ou é uma pirâmide. Por exemplo, X–X–△ vale para X; X–△–△ não vale para ninguém.</p></div>
+      <div class="rule-part"><h3>4. Fim da partida</h3><p>Se X e O completarem linhas válidas ao mesmo tempo após uma jogada, vence quem teria a vez seguinte. Se os nove territórios forem encerrados sem linha vencedora, a partida termina empatada.</p></div>
+      <div class="modal-actions"><button type="button" id="closeRulesBottom" class="chalk-button primary">Entendi, vamos jogar</button></div>
+    </div>
+  </div>
+
+  <div id="confirmModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
+    <div class="chalk-modal" style="width:min(420px,100%)">
+      <div class="modal-head"><div><h2 id="confirmTitle">Apagar a partida?</h2><p id="confirmMessage" style="margin:0">O progresso desta partida será perdido.</p></div><button type="button" id="cancelConfirmX" class="modal-close" aria-label="Cancelar">×</button></div>
+      <div class="modal-actions"><button type="button" id="cancelConfirm" class="chalk-button">Continuar jogando</button><button type="button" id="acceptConfirm" class="chalk-button primary">Sim, continuar</button></div>
+    </div>
+  </div>
+
+<script src="./game.js" defer></script>
+</body>
+</html>
